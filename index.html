@@ -118,7 +118,8 @@
         R = 12,
         GAP = 140,
         PW = 54,
-        GSPEED = 380;
+        GSPEED = 380,
+        SPACING = 210;
       let state = "ready",
         bird,
         pipes,
@@ -308,14 +309,15 @@
         bird.y += bird.vy * dt;
         bird.y = Math.max(R, Math.min(H - R, bird.y));
         // pipes
-        spawnT -= dt;
-        if (spawnT <= 0) {
-          pipes.push({
-            x: W,
+        // pipes: spawn by DISTANCE so spacing is always the same and a next pipe is always ready
+        let lp = pipes[pipes.length - 1];
+        while (!lp || lp.x + SPACING <= W + 40) {
+          lp = {
+            x: lp ? lp.x + SPACING : 400,
             gy: rand(GAP / 2 + 20, H - GAP / 2 - 20),
             passed: false,
-          });
-          spawnT = 2.2;
+          };
+          pipes.push(lp);
         }
         const speed = 95 + Math.min(score, 25) * 2.5;
         const act = active();
